@@ -10,11 +10,14 @@
 <script type="module" src="/workout.mjs"></script>
 </head>
 <body><main>
-<p class="brand">Nadir</p>
-<h1>A workout shared with you</h1>
-<p>Open it in Nadir to review its blocks before adding it to Train. Percentage holds use your own personal bests.</p>
-<a id="open-workout" hidden>Open in Nadir</a>
+<p class="brand">Nadir workout</p>
+<h1 id="workout-title">A workout shared with you</h1>
+<p id="hold-count"></p>
+<p id="workout-explanation"></p>
+<ul id="workout-blocks" role="list" hidden></ul>
 <p id="share-status" role="status">Checking the workout link…</p>
 <a id="get-nadir" href="https://testflight.apple.com/join/dg3C5UUX" rel="noreferrer">Get Nadir</a>
+<p>Nadir is in beta on TestFlight.</p>
+<p id="open-workout-prompt" hidden>Already have Nadir? <a id="open-workout" hidden>Open in Nadir</a></p>
 <p class="privacy">The workout stays in this link. This page does not upload it or use analytics.</p>
 </main></body></html>
