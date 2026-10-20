@@ -1,1 +1,32 @@
-:root{color-scheme:light dark;font-family:system-ui,sans-serif}body{margin:0;background:Canvas;color:CanvasText}main{max-width:34rem;margin:12vh auto;padding:1.5rem;line-height:1.5}.brand{font-weight:700}h1{line-height:1.15}a,button{display:block;width:fit-content;padding:.8rem 1.2rem;margin:1rem 0;border:1px solid currentColor;border-radius:2rem;font:inherit}a{color:LinkText}a[hidden]{display:none}.privacy{font-size:.9rem;color:GrayText}
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  --ground: #eef3f1; --surface: #fff; --ink: #0e1a1c;
+  --secondary: #55646a; --accent: #006c72; --control: #006c72; --on-control: #fff;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ground: #061114; --surface: #0f1f22; --ink: #eaf2f0; --secondary: #9cb0b3; --accent: #5fd0c8; --control: #237178; --on-control: #fff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); }
+main { max-width: 30rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.45; }
+.brand { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--secondary); margin-bottom: .25rem; }
+h1 { font: 500 2.125rem/1.15 Georgia, serif; margin: 0 0 .6rem; overflow-wrap: anywhere; }
+#hold-count { margin: 0 0 .4rem; }
+#workout-explanation, #share-status { color: var(--secondary); font-size: .9rem; }
+ul { list-style: none; padding: 0; }
+#workout-blocks { margin: 1rem 0 1.25rem; }
+li { padding: .875rem 1rem; margin: .5rem 0; background: var(--surface); border-radius: 1.5rem; }
+li ul { margin: .75rem 0 0; padding-left: .75rem; border-left: 1px solid var(--secondary); }
+li li { padding: .5rem; border-radius: 0; }
+.block-line { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; overflow-wrap: anywhere; }
+.block-line span { min-width: 0; }
+.block-line span:first-child { font-weight: 600; }
+.block-line span:last-child { text-align: right; color: var(--secondary); }
+.block-note { margin: .35rem 0 0; font-size: .8rem; font-style: italic; color: var(--secondary); white-space: pre-line; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+#get-nadir { display: block; padding: .875rem 1.2rem; border-radius: 2rem; text-align: center; background: var(--control); color: var(--on-control); font-weight: 600; text-decoration: none; }
+#get-nadir + p { color: var(--secondary); font-size: .8rem; text-align: center; }
+#open-workout-prompt { text-align: center; font-size: .9rem; color: var(--accent); }
+[hidden] { display: none !important; }
+.privacy { margin-top: 1.25rem; font-size: .8rem; color: var(--secondary); }
