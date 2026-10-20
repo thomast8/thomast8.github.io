@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "9W2YL9NTD6.com.thomastiotto.nadir"
+        ],
+        "components": [
+          {
+            "/": "/w"
+          },
+          {
+            "/": "/w/"
+          }
+        ]
+      }
+    ]
+  }
+}
