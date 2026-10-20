@@ -45,6 +45,21 @@ test("hold routines stay compact and retain packing and instructions", () => {
     assert.ok(preview.rows[0].notes.includes(fact));
 });
 
+test("patterned breath counts derive from their saved window and complete cycle", () => {
+  const pattern = { type: "pattern", pattern: { inhale: 4, holdIn: 1, exhale: 6, holdOut: 1 } };
+  const preview = workoutPreview(share([
+    { type: "breathe", style: "full", duration: 60, lengthIn: "breaths", pacing: pattern },
+    { type: "breathe", style: "full", duration: 60, lengthIn: "time", pacing: pattern },
+    { type: "breathe", duration: 60, lengthIn: "breaths", untilTap: true, pacing: { type: "free" } },
+    { type: "breathe", duration: 60, pacing: { type: "count", breaths: 6 } },
+    { type: "breathe", style: "packing", duration: 16, lengthIn: "breaths", pacing: pattern },
+    { type: "breathe", style: "recovery", duration: 60, lengthIn: "breaths", pacing: pattern }
+  ]));
+  assert.equal(preview.state, "ready");
+  assert.deepEqual(preview.rows.map(row => row.timing), ["5 breaths", "1:00", "until tap", "6 breaths", "4 breaths", "1:00"]);
+  assert.ok(preview.rows[0].notes.includes("0:01 pause"));
+});
+
 test("measured and continuing targets remain targets rather than estimated durations", () => {
   const preview = workoutPreview(share([
     { type: "hold", target: { type: "fixed", seconds: 90 }, continuePastTarget: true },

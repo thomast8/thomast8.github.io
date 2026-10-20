@@ -38,6 +38,13 @@ export function workoutPreview(hash) {
             if (block.lengthIn === "breaths") required = Math.max(required, block.pacing?.type === "free" ? 4 : 3);
             if (block.pacing?.type === "pattern") {
               const pattern = block.pacing.pattern;
+              if (block.lengthIn === "breaths" && !block.untilTap && !["recovery", "tidal"].includes(block.style)) {
+                const cycle = block.style === "packing" ? 4 : ["inhale", "holdIn", "exhale", "holdOut"]
+                  .reduce((sum, key) => sum + integer(pattern[key] ?? 0, 0, 366 * 86400), 0);
+                if (cycle <= 0) throw Error();
+                const count = block.duration / cycle;
+                if (Number.isSafeInteger(count) && count > 0) row.timing = `${count} breaths`;
+              }
               row.notes = [pattern.inhale > 0 ? `${clock(pattern.inhale)} in` : "", pattern.holdIn > 0 ? `${clock(pattern.holdIn)} pause` : "",
                 pattern.exhale > 0 ? `${clock(pattern.exhale)} out` : "", pattern.holdOut > 0 ? `${clock(pattern.holdOut)} pause` : "", row.notes].filter(Boolean).join(" · ");
             }
