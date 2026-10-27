@@ -15,7 +15,7 @@ export function workoutPreview(hash) {
     const bytes = Uint8Array.from(atob(token + "=".repeat((4 - token.length % 4) % 4)), c => c.charCodeAt(0));
     const document = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
     if (!Number.isSafeInteger(document.formatVersion) || document.formatVersion < 1) throw Error();
-    if (document.formatVersion > 12) return { state: "newer", appLink };
+    if (document.formatVersion > 18) return { state: "newer", appLink };
     const plan = document.plan;
     if (!plan || (plan.kind !== undefined && plan.kind !== "training")) throw Error();
     const name = text(plan.name);
@@ -95,11 +95,19 @@ export function workoutPreview(hash) {
             } else row.timing = clock(block.duration);
             break;
           case "activity": row.title ||= "Activity"; row.timing = clock(block.duration); break;
-          case "finalBreath":
+          case "finalBreath": {
+            if (block.manualPacks != null) {
+              if (typeof block.manualPacks !== "boolean") throw Error();
+              required = Math.max(required, 18);
+            }
             row.title ||= "Final breath";
             row.timing = clock(block.duration ?? 10);
-            if (block.style === "packed") row.timing += ` · ${integer(block.packCount ?? 8, 1, 500)} packs`;
+            if (block.style === "packed") {
+              const count = integer(block.packCount ?? 8, 1, 500);
+              row.timing += block.manualPacks === true ? " · packs counted by taps" : ` · ${count} packs`;
+            }
             break;
+          }
           case "group":
           case "sequence": {
             if (depth >= 8) throw Error();
