@@ -17,7 +17,9 @@ incoming-link confirmation have separate Core/App/native UI gates.
 
 The preview reads the app's existing base64url JSON document locally, without compression,
 personal-best pricing or a session executor. Version support follows Nadir's PlanFormatVersion
-(currently through 12). Unknown versions keep the native handoff and show an update message;
+(currently through 18). Tap-counted packing is shown as packs counted by taps, after the authored
+inhale, rather than as a fixed pack count. Legacy shares keep their saved timing and count.
+Unknown versions keep the native handoff and show an update message;
 malformed input shows no workout. Limits match the native wire's duration/depth/expansion bounds,
 with the existing 2,000-character portable-link limit bounding all input before parsing.
 The native importer remains responsible for full plan validation. Authored starting targets and

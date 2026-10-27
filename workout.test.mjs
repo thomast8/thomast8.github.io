@@ -85,7 +85,7 @@ test("format12 keeps the target independent from manual ending", () => {
 });
 
 test("new versions are distinguished before unknown blocks and malformed input stays bounded", () => {
-  assert.equal(workoutPreview(share([{ type: "future-block" }], { formatVersion: 13 })).state, "newer");
+  assert.equal(workoutPreview(share([{ type: "future-block" }], { formatVersion: 19 })).state, "newer");
   const invalid = ["#e30", "#_w", "#" + "a".repeat(2000),
     share([{ type: "hold", target: { type: "percentOfMax", percent: "60" } }]),
     share([{ type: "group", repeats: 50001, blocks: [{ type: "rest", duration: 60 }] }]),
@@ -168,7 +168,7 @@ test("changing a fragment replaces or clears the previously offered workout", as
     assert.match(status.textContent, /incomplete/);
     assert.equal(elements["workout-blocks"].children.length, 0);
     assert.equal(elements["workout-blocks"].hidden, true);
-    globalThis.location.hash = share([], { formatVersion: 13 }); change();
+    globalThis.location.hash = share([], { formatVersion: 19 }); change();
     assert.equal(open.hidden, false);
     assert.match(status.textContent, /newer Nadir/);
   } finally {
@@ -177,4 +177,34 @@ test("changing a fragment replaces or clears the previously offered workout", as
       else delete globalThis[name];
     });
   }
+});
+
+test("format18 distinguishes tap-counted packs from a fixed pack count", () => {
+  const preparation = { type: "finalBreath", style: "packed", duration: 7, packCount: 8, manualPacks: true };
+  const blocks = [{ type: "sequence", role: "holdRoutine", blocks: [preparation,
+    { type: "hold", style: "packed", target: { type: "untilTap" } }
+  ] }];
+  const preview = workoutPreview(share(blocks, { formatVersion: 18 }));
+  assert.equal(preview.state, "ready");
+  assert.equal(preview.holds, 1);
+  assert.equal(preview.rows[0].timing, "until tap");
+  assert.match(preview.rows[0].notes, /Final breath: 0:07 · packs counted by taps/);
+  assert.ok(!preview.rows[0].notes.includes("8 packs"));
+  preparation.manualPacks = false;
+  assert.match(workoutPreview(share(blocks, { formatVersion: 18 })).rows[0].notes, /0:07 · 8 packs/);
+  const authoredInhale = workoutPreview(share([{ type: "finalBreath", style: "full", duration: 13 }], { formatVersion: 18 }));
+  assert.equal(authoredInhale.state, "ready");
+  assert.equal(authoredInhale.rows[0].timing, "0:13");
+});
+
+test("packing mode requires format18 and a boolean while legacy shares remain readable", () => {
+  for (const manualPacks of [true, false]) {
+    const blocks = [{ type: "finalBreath", style: "packed", duration: 7, manualPacks }];
+    assert.equal(workoutPreview(share(blocks, { formatVersion: 17 })).state, "invalid");
+  }
+  for (const manualPacks of ["true", 1, {}])
+    assert.equal(workoutPreview(share([{ type: "finalBreath", style: "packed", manualPacks }], { formatVersion: 18 })).state, "invalid");
+  const legacy = workoutPreview(share([{ type: "finalBreath", style: "packed" }]));
+  assert.equal(legacy.state, "ready");
+  assert.equal(legacy.rows[0].timing, "0:10 · 8 packs");
 });
